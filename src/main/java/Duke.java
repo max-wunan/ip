@@ -9,7 +9,7 @@ public class Duke {
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
         printGreetings();
-        storeText();
+        storeTasks();
     }
 
     public static void printGreetings() {
@@ -22,28 +22,36 @@ public class Duke {
         System.out.println(greeting);
     }
 
-    public static void storeText() {
+    public static void storeTasks() {
         String line;
-        String[] texts = new String[100];
+        Task[] tasks = new Task[100];
         Scanner in = new Scanner(System.in);
         line  = in.nextLine();
-        int textIndex = 0;
+        int taskIndex = 0;
         while (!line.equals("bye")) {
             if (line.equals("list")) {
                 System.out.println("____________________________________________________________\n");
-                for (int i = 1; i <= textIndex; i++) {
-                    System.out.println(i + "." + texts[i-1]);
+                System.out.println("Here are the tasks in your list:\n");
+                for (int i = 1; i <= taskIndex; i++) {
+                    System.out.println(i + "." + "["+ tasks[i-1].getStatusIcon() + "] " + tasks[i-1].description + "\n");
                 }
                 System.out.println("____________________________________________________________\n");
+            } else if (line.startsWith("done")) {
+                int taskNo = Integer.parseInt(line.substring(5));
+                tasks[taskNo-1].isDone = true;
+                System.out.println("____________________________________________________________\n");
+                System.out.println("Nice! I've marked this task as done:\n");
+                System.out.println("[" + tasks[taskNo-1].getStatusIcon() + "]" + tasks[taskNo-1].description + "\n");
+                System.out.println("____________________________________________________________\n");
             } else {
-                texts[textIndex] = line;
-                textIndex++;
+                tasks[taskIndex] = new Task(line);
+                taskIndex++;
                 String fromDuke = "____________________________________________________________\n"
                         + "added: " + line + "\n"
-                        + "____________________________________________________________\n"
-                        + "\n";
+                        + "____________________________________________________________\n";
                 System.out.println(fromDuke);
             }
+            System.out.println("\n");
             line = in.nextLine();
         }
         String bye = "____________________________________________________________\n"
