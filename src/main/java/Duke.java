@@ -9,28 +9,41 @@ public class Duke {
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
         printGreetings();
-        analyzeCommand();
+        storeText();
     }
-    
+
     public static void printGreetings() {
         String greeting = "____________________________________________________________\n"
                 + "Hello! I'm Duke\n"
                 + "What can I do for you?\n"
-                + "____________________________________________________________\n";
+                + "____________________________________________________________\n"
+                + "\n";
 
         System.out.println(greeting);
     }
-    
-    public static void analyzeCommand() {
+
+    public static void storeText() {
         String line;
+        String[] texts = new String[100];
         Scanner in = new Scanner(System.in);
         line  = in.nextLine();
+        int textIndex = 0;
         while (!line.equals("bye")) {
-            String fromDuke = "____________________________________________________________\n"
-                    + line + "\n"
-                    + "____________________________________________________________\n"
-                    + "\n";
-            System.out.println(fromDuke);
+            if (line.equals("list")) {
+                System.out.println("____________________________________________________________\n");
+                for (int i = 1; i <= textIndex; i++) {
+                    System.out.println(i + "." + texts[i-1]);
+                }
+                System.out.println("____________________________________________________________\n");
+            } else {
+                texts[textIndex] = line;
+                textIndex++;
+                String fromDuke = "____________________________________________________________\n"
+                        + "added: " + line + "\n"
+                        + "____________________________________________________________\n"
+                        + "\n";
+                System.out.println(fromDuke);
+            }
             line = in.nextLine();
         }
         String bye = "____________________________________________________________\n"
