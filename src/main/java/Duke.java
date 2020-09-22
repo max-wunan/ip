@@ -8,11 +8,11 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
-        printGreetings();
+        printGreeting();
         storeTasks();
     }
 
-    public static void printGreetings() {
+    public static void printGreeting() {
         String greeting = "____________________________________________________________\n"
                 + "Hello! I'm Duke\n"
                 + "What can I do for you?\n"
@@ -30,12 +30,7 @@ public class Duke {
         int taskIndex = 0;
         while (!line.equals("bye")) {
             if (line.equals("list")) {
-                System.out.println("____________________________________________________________\n");
-                System.out.println("Here are the tasks in your list:\n");
-                for (int i = 1; i <= taskIndex; i++) {
-                    System.out.println(i + "." + "["+ tasks[i-1].getStatusIcon() + "] " + tasks[i-1].description + "\n");
-                }
-                System.out.println("____________________________________________________________\n");
+                printList(tasks, taskIndex);
             } else if (line.startsWith("done")) {
                 int taskNo = Integer.parseInt(line.substring(5));
                 tasks[taskNo-1].isDone = true;
@@ -43,20 +38,90 @@ public class Duke {
                 System.out.println("Nice! I've marked this task as done:\n");
                 System.out.println("[" + tasks[taskNo-1].getStatusIcon() + "]" + tasks[taskNo-1].description + "\n");
                 System.out.println("____________________________________________________________\n");
-            } else {
-                tasks[taskIndex] = new Task(line);
+            } else if (line.startsWith("todo")) {
+                /*tasks[taskIndex] = new Task(line);
                 taskIndex++;
                 String fromDuke = "____________________________________________________________\n"
                         + "added: " + line + "\n"
                         + "____________________________________________________________\n";
-                System.out.println(fromDuke);
+                System.out.println(fromDuke);*/
+                String content = line.substring(5);
+                Todo newTodo = new Todo(content);
+                tasks[taskIndex] = newTodo;
+                taskIndex++;
+                printTodo(newTodo, taskIndex);
+            } else if (line.startsWith("deadline")) {
+                String content = line.substring(9, line.indexOf("/"));
+                String deadline = line.substring(line.indexOf("/") + 4);
+                Deadline newDeadline = new Deadline(content, deadline);
+                tasks[taskIndex] = newDeadline;
+                taskIndex++;
+                printDeadline(newDeadline, taskIndex);
+            } else if (line.startsWith("event")) {
+                String content = line.substring(6, line.indexOf("/"));
+                String startTime = line.substring(line.indexOf("/") + 4);
+                Event newEvent = new Event(content, startTime);
+                tasks[taskIndex] = newEvent;
+                taskIndex++;
+                printEvent(newEvent, taskIndex);
             }
             System.out.println("\n");
             line = in.nextLine();
         }
+        printBye();
+    }
+
+    public static void printBye() {
         String bye = "____________________________________________________________\n"
                 + "Bye. Hope to see you again soon!\n"
                 + "____________________________________________________________\n";
         System.out.println(bye);
+    }
+
+    public static void printList(Task[] tasks, int taskIndex) {
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Here are the tasks in your list:\n");
+        for (int i = 1; i <= taskIndex; i++) {
+            System.out.println(i + "." + tasks[i-1].getSymbol() + tasks[i-1].getStatusIcon() + tasks[i-1].getDescription() + "\n");
+        }
+        System.out.println("____________________________________________________________\n");
+    }
+
+    public static void printTodo(Todo newTodo, int taskIndex) {
+        /*String content = line.substring(5);
+        Todo newTodo = new Todo(content);
+        tasks[taskIndex] = newTodo;
+        taskIndex++;*/
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Got it. I've added this task: ");
+        System.out.println(newTodo.symbol + newTodo.getStatusIcon() + " " + newTodo.description);
+        System.out.println("Now you have " + taskIndex + " tasks in the list.");
+        System.out.println("____________________________________________________________\n");
+    }
+
+    public static void printDeadline(Deadline newDeadline, int taskIndex) {
+        /*String content = line.substring(9, line.indexOf("/"));
+        String deadline = line.substring(line.indexOf("/") + 4);
+        Deadline newDeadline = new Deadline(content, deadline);
+        tasks[taskIndex] = newDeadline;
+        taskIndex++;*/
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Got it. I've added this task: ");
+        System.out.println(newDeadline.symbol + newDeadline.getStatusIcon() + " " + newDeadline.description + "(by: " + newDeadline.deadline + ")");
+        System.out.println("Now you have " + taskIndex + " tasks in the list.");
+        System.out.println("____________________________________________________________\n");
+    }
+
+    public static void printEvent(Event newEvent, int taskIndex) {
+        /*String content = line.substring(6, line.indexOf("/"));
+        String startTime = line.substring(line.indexOf("/") + 4);
+        Event newEvent = new Event(content, startTime);
+        tasks[taskIndex] = newEvent;
+        taskIndex++;*/
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Got it. I've added this task: ");
+        System.out.println(newEvent.symbol + newEvent.getStatusIcon() + " " + newEvent.description + "(at: " + newEvent.startTime + ")");
+        System.out.println("Now you have " + taskIndex + " tasks in the list.");
+        System.out.println("____________________________________________________________\n");
     }
 }
