@@ -28,47 +28,83 @@ public class Duke {
         Scanner in = new Scanner(System.in);
         line  = in.nextLine();
         int taskIndex = 0;
-        while (!line.equals("bye")) {
-            if (line.equals("list")) {
-                printList(tasks, taskIndex);
-            } else if (line.startsWith("done")) {
-                int taskNo = Integer.parseInt(line.substring(5));
-                tasks[taskNo-1].isDone = true;
-                System.out.println("____________________________________________________________\n");
-                System.out.println("Nice! I've marked this task as done:\n");
-                System.out.println("[" + tasks[taskNo-1].getStatusIcon() + "]" + tasks[taskNo-1].description + "\n");
-                System.out.println("____________________________________________________________\n");
-            } else if (line.startsWith("todo")) {
-                /*tasks[taskIndex] = new Task(line);
+        while (true) {
+            try {
+                if (line.equals("list")) {
+                    printList(tasks, taskIndex);
+                } else if (line.startsWith("done")) {
+                    int taskNo = Integer.parseInt(line.substring(5));
+                    tasks[taskNo-1].isDone = true;
+                    System.out.println("____________________________________________________________\n");
+                    System.out.println("Nice! I've marked this task as done:\n");
+                    System.out.println("[" + tasks[taskNo-1].getStatusIcon() + "]" + tasks[taskNo-1].description + "\n");
+                    System.out.println("____________________________________________________________\n");
+                } else if (line.startsWith("todo")) {
+                    /*tasks[taskIndex] = new Task(line);
                 taskIndex++;
                 String fromDuke = "____________________________________________________________\n"
                         + "added: " + line + "\n"
                         + "____________________________________________________________\n";
                 System.out.println(fromDuke);*/
-                String content = line.substring(5);
-                Todo newTodo = new Todo(content);
-                tasks[taskIndex] = newTodo;
-                taskIndex++;
-                printTodo(newTodo, taskIndex);
-            } else if (line.startsWith("deadline")) {
-                String content = line.substring(9, line.indexOf("/"));
-                String deadline = line.substring(line.indexOf("/") + 4);
-                Deadline newDeadline = new Deadline(content, deadline);
-                tasks[taskIndex] = newDeadline;
-                taskIndex++;
-                printDeadline(newDeadline, taskIndex);
-            } else if (line.startsWith("event")) {
-                String content = line.substring(6, line.indexOf("/"));
-                String startTime = line.substring(line.indexOf("/") + 4);
-                Event newEvent = new Event(content, startTime);
-                tasks[taskIndex] = newEvent;
-                taskIndex++;
-                printEvent(newEvent, taskIndex);
+                    if (line.length() <= 5) {
+                        throw new DukeException("todo");
+                    }
+                    String content = line.substring(5);
+                    Todo newTodo = new Todo(content);
+                    tasks[taskIndex] = newTodo;
+                    taskIndex++;
+                    printTodo(newTodo, taskIndex);
+                    /*System.out.println("____________________________________________________________\n");
+                    System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
+                    System.out.println("____________________________________________________________\n");*/
+                } else if (line.startsWith("deadline")) {
+                    if (line.length() <= 9) {
+                        throw new DukeException("deadline");
+                    }
+                    String content = line.substring(9, line.indexOf("/"));
+                    String deadline = line.substring(line.indexOf("/") + 4);
+                    Deadline newDeadline = new Deadline(content, deadline);
+                    tasks[taskIndex] = newDeadline;
+                    taskIndex++;
+                    printDeadline(newDeadline, taskIndex);
+                } else if (line.startsWith("event")) {
+                    if (line.length() <= 6) {
+                        throw new DukeException("event");
+                    }
+                    String content = line.substring(6, line.indexOf("/"));
+                    String startTime = line.substring(line.indexOf("/") + 4);
+                    Event newEvent = new Event(content, startTime);
+                    tasks[taskIndex] = newEvent;
+                    taskIndex++;
+                    printEvent(newEvent, taskIndex);
+                } else if (line.equals("bye")) {
+                    printBye();
+                    break;
+                } else {
+                    throw new DukeException();
+                    /*System.out.println("____________________________________________________________\n");
+                    System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+                    System.out.println("____________________________________________________________\n");*/
+                }
+
+            } catch (DukeException e) {
+                System.out.println("____________________________________________________________\n");
+                if (e.type.equals("todo")) {
+                    System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
+                } else if (e.type.equals("deadline")) {
+                    System.out.println("☹ OOPS!!! The description of a deadline cannot be empty.");
+                } else if (e.type.equals("event")) {
+                    System.out.println("☹ OOPS!!! The description of an event cannot be empty.");
+                } else if (e.type.equals("invalid description")) {
+                    System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+                }
+                System.out.println("____________________________________________________________\n");
             }
             System.out.println("\n");
             line = in.nextLine();
+
         }
-        printBye();
+
     }
 
     public static void printBye() {
