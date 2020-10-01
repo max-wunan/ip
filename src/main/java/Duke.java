@@ -28,7 +28,7 @@ public class Duke {
         Scanner in = new Scanner(System.in);
         line  = in.nextLine();
         int taskIndex = 0;
-        while (!line.equals("bye")) {
+        while (true) {
             if (line.equals("list")) {
                 printList(tasks, taskIndex);
             } else if (line.startsWith("done")) {
@@ -45,30 +45,58 @@ public class Duke {
                         + "added: " + line + "\n"
                         + "____________________________________________________________\n";
                 System.out.println(fromDuke);*/
-                String content = line.substring(5);
-                Todo newTodo = new Todo(content);
-                tasks[taskIndex] = newTodo;
-                taskIndex++;
-                printTodo(newTodo, taskIndex);
+                try {
+                    String content = line.substring(5);
+                    Todo newTodo = new Todo(content);
+                    tasks[taskIndex] = newTodo;
+                    taskIndex++;
+                    printTodo(newTodo, taskIndex);
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("____________________________________________________________\n");
+                    System.out.println("☹ OOPS!!! The description of a todo cannot be empty.");
+                    System.out.println("____________________________________________________________\n");
+                }
+
             } else if (line.startsWith("deadline")) {
-                String content = line.substring(9, line.indexOf("/"));
-                String deadline = line.substring(line.indexOf("/") + 4);
-                Deadline newDeadline = new Deadline(content, deadline);
-                tasks[taskIndex] = newDeadline;
-                taskIndex++;
-                printDeadline(newDeadline, taskIndex);
+                try {
+                    String content = line.substring(9, line.indexOf("/"));
+                    String deadline = line.substring(line.indexOf("/") + 4);
+                    Deadline newDeadline = new Deadline(content, deadline);
+                    tasks[taskIndex] = newDeadline;
+                    taskIndex++;
+                    printDeadline(newDeadline, taskIndex);
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("____________________________________________________________\n");
+                    System.out.println("☹ OOPS!!! The description of a deadline cannot be empty.");
+                    System.out.println("____________________________________________________________\n");
+                }
+
             } else if (line.startsWith("event")) {
-                String content = line.substring(6, line.indexOf("/"));
-                String startTime = line.substring(line.indexOf("/") + 4);
-                Event newEvent = new Event(content, startTime);
-                tasks[taskIndex] = newEvent;
-                taskIndex++;
-                printEvent(newEvent, taskIndex);
+                try {
+                    String content = line.substring(6, line.indexOf("/"));
+                    String startTime = line.substring(line.indexOf("/") + 4);
+                    Event newEvent = new Event(content, startTime);
+                    tasks[taskIndex] = newEvent;
+                    taskIndex++;
+                    printEvent(newEvent, taskIndex);
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("____________________________________________________________\n");
+                    System.out.println("☹ OOPS!!! The description of an event cannot be empty.");
+                    System.out.println("____________________________________________________________\n");
+                }
+
+            } else if (line.equals("bye")) {
+                printBye();
+                break;
+            } else {
+                System.out.println("____________________________________________________________\n");
+                System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+                System.out.println("____________________________________________________________\n");
             }
             System.out.println("\n");
             line = in.nextLine();
         }
-        printBye();
+
     }
 
     public static void printBye() {
