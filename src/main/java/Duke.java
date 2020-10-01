@@ -1,5 +1,9 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+//import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Duke {
     public static void main(String[] args) {
@@ -84,6 +88,7 @@ public class Duke {
                     printEvent(newEvent, taskIndex);
                 } else if (line.equals("bye")) {
                     printBye();
+                    writeToFile("src/main/java/duke.txt", tasks);
                     break;
                 } else if (line.startsWith("delete")) {
                     int taskNo = Integer.parseInt(line.substring(7));
@@ -106,6 +111,11 @@ public class Duke {
                 } else if (e.type.equals("invalid description")) {
                     System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
+                System.out.println("____________________________________________________________\n");
+            } catch (IOException e) {
+                System.out.println("____________________________________________________________\n");
+                System.out.println("☹ OOPS!!! There is something wrong with the file: ");
+                System.out.println(e.getMessage());
                 System.out.println("____________________________________________________________\n");
             }
             System.out.println("\n");
@@ -177,5 +187,13 @@ public class Duke {
         System.out.println(description);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         System.out.println("____________________________________________________________\n");
+    }
+
+    public static void writeToFile(String filePath, ArrayList<Task> tasks) throws IOException {
+        FileWriter dukeText = new FileWriter(filePath);
+        for (Task task : tasks) {
+            dukeText.write(task.getSymbol() + " | " + task.getStatusIcon() + " | " + task.getDescription());
+        }
+        dukeText.close();
     }
 }
