@@ -1,4 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+//import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Duke {
     public static void main(String[] args) {
@@ -24,20 +29,21 @@ public class Duke {
 
     public static void storeTasks() {
         String line;
-        Task[] tasks = new Task[100];
+        //Task[] tasks = new Task[100];
+        ArrayList<Task> tasks = new ArrayList<>();
         Scanner in = new Scanner(System.in);
         line  = in.nextLine();
         int taskIndex = 0;
         while (true) {
             try {
                 if (line.equals("list")) {
-                    printList(tasks, taskIndex);
+                    printList(tasks);
                 } else if (line.startsWith("done")) {
                     int taskNo = Integer.parseInt(line.substring(5));
-                    tasks[taskNo-1].isDone = true;
+                    tasks.get(taskNo-1).isDone = true;
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Nice! I've marked this task as done:\n");
-                    System.out.println("[" + tasks[taskNo-1].getStatusIcon() + "]" + tasks[taskNo-1].description + "\n");
+                    System.out.println("[" + tasks.get(taskNo-1).getStatusIcon() + "]" + tasks.get(taskNo-1).description + "\n");
                     System.out.println("____________________________________________________________\n");
                 } else if (line.startsWith("todo")) {
                     /*tasks[taskIndex] = new Task(line);
@@ -51,7 +57,8 @@ public class Duke {
                     }
                     String content = line.substring(5);
                     Todo newTodo = new Todo(content);
-                    tasks[taskIndex] = newTodo;
+                    tasks.add(newTodo);
+                    //[taskIndex] = newTodo;
                     taskIndex++;
                     printTodo(newTodo, taskIndex);
                     /*System.out.println("____________________________________________________________\n");
@@ -64,7 +71,8 @@ public class Duke {
                     String content = line.substring(9, line.indexOf("/"));
                     String deadline = line.substring(line.indexOf("/") + 4);
                     Deadline newDeadline = new Deadline(content, deadline);
-                    tasks[taskIndex] = newDeadline;
+                    tasks.add(newDeadline);
+                    //tasks[taskIndex] = newDeadline;
                     taskIndex++;
                     printDeadline(newDeadline, taskIndex);
                 } else if (line.startsWith("event")) {
@@ -74,12 +82,17 @@ public class Duke {
                     String content = line.substring(6, line.indexOf("/"));
                     String startTime = line.substring(line.indexOf("/") + 4);
                     Event newEvent = new Event(content, startTime);
-                    tasks[taskIndex] = newEvent;
+                    tasks.add(newEvent);
+                    //tasks[taskIndex] = newEvent;
                     taskIndex++;
                     printEvent(newEvent, taskIndex);
                 } else if (line.equals("bye")) {
                     printBye();
+                    writeToFile("src/main/java/duke.txt", tasks);
                     break;
+                } else if (line.startsWith("delete")) {
+                    int taskNo = Integer.parseInt(line.substring(7));
+                    deleteTask(tasks, taskNo);
                 } else {
                     throw new DukeException();
                     /*System.out.println("____________________________________________________________\n");
@@ -99,6 +112,11 @@ public class Duke {
                     System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
                 System.out.println("____________________________________________________________\n");
+            } catch (IOException e) {
+                System.out.println("____________________________________________________________\n");
+                System.out.println("☹ OOPS!!! There is something wrong with the file: ");
+                System.out.println(e.getMessage());
+                System.out.println("____________________________________________________________\n");
             }
             System.out.println("\n");
             line = in.nextLine();
@@ -114,11 +132,11 @@ public class Duke {
         System.out.println(bye);
     }
 
-    public static void printList(Task[] tasks, int taskIndex) {
+    public static void printList(ArrayList<Task> tasks) {
         System.out.println("____________________________________________________________\n");
         System.out.println("Here are the tasks in your list:\n");
-        for (int i = 1; i <= taskIndex; i++) {
-            System.out.println(i + "." + tasks[i-1].getSymbol() + tasks[i-1].getStatusIcon() + tasks[i-1].getDescription() + "\n");
+        for (int i = 1; i <= tasks.size(); i++) {
+            System.out.println(i + "." + tasks.get(i-1).getSymbol() + tasks.get(i-1).getStatusIcon() + tasks.get(i-1).getDescription() + "\n");
         }
         System.out.println("____________________________________________________________\n");
     }
@@ -159,5 +177,23 @@ public class Duke {
         System.out.println(newEvent.symbol + newEvent.getStatusIcon() + " " + newEvent.description + "(at: " + newEvent.startTime + ")");
         System.out.println("Now you have " + taskIndex + " tasks in the list.");
         System.out.println("____________________________________________________________\n");
+    }
+
+    public static void deleteTask(ArrayList<Task> tasks, int taskindex) {
+        String description = tasks.get(taskindex-1).getSymbol() + tasks.get(taskindex-1).getStatusIcon() + tasks.get(taskindex-1).getDescription();
+        tasks.remove(taskindex-1);
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Noted. I've removed this task: ");
+        System.out.println(description);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println("____________________________________________________________\n");
+    }
+
+    public static void writeToFile(String filePath, ArrayList<Task> tasks) throws IOException {
+        FileWriter dukeText = new FileWriter(filePath);
+        for (Task task : tasks) {
+            dukeText.write(task.getSymbol() + " | " + task.getStatusIcon() + " | " + task.getDescription());
+        }
+        dukeText.close();
     }
 }
