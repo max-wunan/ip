@@ -1,15 +1,19 @@
+/*
+* Represents all possible commands including invalid commands
+* types of commands are represented by integers as follows:
+* 1 - add Todo
+* 2 - add Deadline
+* 3 - add Event
+* 4 - print task list
+* 5 - delete task
+* 6 - find task
+* 7 - mark a task as done
+* 0 - exit
+* -1 - invalid command
+* */
 public class Command {
     public int commandType;
 
-    /*
-    * 1 - add Todo
-    * 2 - add Deadline
-    * 3 - add Event
-    * 4 - print task list
-    * 5 - delete task
-    * 6 - find task
-    * 7 - mark a task as done
-    * 0 - exit*/
     public Command(int typeInteger) {
         this.commandType = typeInteger;
     }
@@ -18,6 +22,13 @@ public class Command {
         this(-1); // -1 represents invalid input
     }
 
+    /*
+    * Function to print information of newly created todo/deadline/event object
+    * returns nothing
+    *
+    * @param tasklist the TaskList object where newly created todo/deadline/event objects are stored
+    * @param newTask the newly created todo/deadline/event object
+    * */
     public void printCommand(TaskList tasklist, Task newTask) {
         System.out.println("____________________________________________________________\n");
         System.out.println("Got it. I've added this task: ");
@@ -26,6 +37,14 @@ public class Command {
         System.out.println("____________________________________________________________\n");
     }
 
+    /*
+    * Function to execute various commands, including add, delete and find tasks, etc.
+    * returns nothing
+    *
+    * @param tasklist the TaskList object where all task information is stored
+    * @param fullCommand the command text input by users
+    * @throws DukeException when detecting incomplete and incorrect commands
+    * */
     public void executeCommand(TaskList tasklist, String fullCommand) throws DukeException {
         switch (this.commandType) {
             case 1: // when the command is to add a new Todo
