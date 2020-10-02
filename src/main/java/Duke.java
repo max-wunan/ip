@@ -5,7 +5,11 @@ import java.io.FileNotFoundException;
 //import java.io.FileWriter;
 import java.io.IOException;
 
-
+/*
+* Represents the whole Duke project
+* a Duke(filepath) object represents a Duke project
+* that store all task information in file at the path of filepath
+* */
 public class Duke {
 
     private Storage storage;
@@ -13,6 +17,14 @@ public class Duke {
     private Ui ui;
 
 
+    /*
+    * The constructor for a Duke object, returns nothing
+    * loading the task information that already exist in the file
+    * which is written by previous runs before each run
+    *
+    * @param the path of the file on which the task information is written
+    * @throws FileNotFoundException when the file is not found at the path given
+    * */
     public Duke(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -27,6 +39,15 @@ public class Duke {
         }
     }
 
+    /*
+    * Function that execute the functions of this app
+    * no parameters, returns nothing
+    * continues the running until command "bye" is typed in to break the loop
+    * call functions to execute each specific functions
+    *
+    * @throws DukeException when the command typed in is incomplete or different from any existing commands
+    * @throws IOEException when issues are detected during file writing
+    * */
     public void run() {
         ui.printGreeting();
         boolean isExit = false;
@@ -77,6 +98,19 @@ public class Duke {
                         System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
                         ui.printLine();
                         break;
+                    case "delete non-existing task": // trying to delete tasks that do not exist
+                        ui.printLine();
+                        System.out.println("☹ OOPS!!! You can't delete a task that doesn't exist :-(");
+                        ui.printLine();
+                    case "mark non-existent task as done": // trying to mark non-existing task as done
+                        ui.printLine();
+                        System.out.println("☹ OOPS!!! You can't mark a task that doesn't exist as done :-(");
+                        ui.printLine();
+                    case "already done": // trying to mark task that is already done as done
+                        ui.printLine();
+                        System.out.println("☹ OOPS!!! You can't mark a task that is already done as done :-(");
+                        ui.printLine();
+
                 }
             } catch (IOException e) {
                 ui.printLine();
