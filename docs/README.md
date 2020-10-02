@@ -35,7 +35,7 @@ Prerequisites: JDK 11, update Intellij to the most recent version.
     Here are the tasks in your list:
     1.[T][✘] task A
     2.[D][✘] Task B (by: deadline)
-    ...
+    
     
     -----------------------
     ```
